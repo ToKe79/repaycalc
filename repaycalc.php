@@ -28,7 +28,7 @@ if($loan_day >= $stmt_day) {
 $frst_stmt_date = mktime(0, 0, 0, $frst_stmt_month, $stmt_day, $frst_stmt_year);
 
 $finished = 0;
-$repayment = round($limit/$nr_of_payments, 2);
+$repayment = round($limit / $nr_of_payments, 2);
 $iter = 0;
 
 while($finished == 0) {
@@ -51,7 +51,7 @@ while($finished == 0) {
 			$payments[$i]['on_principal'] = $repayment;
 			$payments[$i]['remainder'] = $remainder;
 			$payments[$i]['date'] = $cur_due_date;
-			$payments[$i]['amouont'] = $repayment;
+			$payments[$i]['amount'] = $repayment;
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
 			$cur_stmt_date = strtotime("+1 month", $cur_stmt_date);
@@ -120,8 +120,43 @@ while($finished == 0) {
 		$payments[12]['remainder']-= $remainder;
 	} else {
 		echo "failed :-(\n";
-		$repayment = $repayment + round($remainder/12, 2);
+		$repayment = $repayment + round($remainder / 12, 2);
 	}
 }
 
+// APR calculation
+$total_paid = $nr_of_payments * $repayment;
+$cost = $total_paid - $limit;
+$nr_of_years = $nr_of_payments / 12;
+$addon = $cost / $limit / $nr_of_years;
+$loi = $addon;
+$hii = $addon * 100;
+
+$finished = 0;
+
+while($finished == 0) {
+	$i = (($loi + $hii) / 2) / 12;
+	$x = 1 + $i;
+	$y = pow($x, $nr_of_payments);
+	$z = 1 / $y;
+	$w = 1 - $z;
+	$u = $w / $i;
+	$pv = $repayment * $u;
+
+	if($pv > $limit + 0.01) {
+		$loi = ($loi + $hii) / 2;
+	} elseif($pv < $limit - 0.01) {
+		$hii = ($loi + $hii) / 2;
+	} else {
+		$finished = 1;
+	}
+
+}
+
+$apr = round((pow(1 + $i, 12) - 1) * 100, 2);
+
+echo "Loan amount = ".$limit."\nTotal paid amount = ".$total_paid."\nTotal loan cost = ".$cost."\nAPR = ".$apr."\n\nPayment calendar:\nDue date\tAmount\ton interest\ton principal\tremaining\n";
+foreach($payments as $pm) {
+	echo date("d.m.Y", $pm['date'])."\t".$pm['amount']."\t".$pm['on_interest']."\t\t".$pm['on_principal']."\t\t".$pm['remainder']."\n";
+}
 ?>
