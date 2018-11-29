@@ -54,11 +54,11 @@ while($finished == 0) {
 			$payments[$i]['amouont'] = $repayment;
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
-			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
+			$cur_stmt_date = strtotime("+1 month", $cur_stmt_date);
 			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		} elseif($i == 2) {
 			// with second payment only interest from previous due date until current statement date are applied
-			$days = (int)round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
+			$days = round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
 			$interest = round($remainder * $int_rate / 360 * $days, 2);
 			if($interest >= $repayment) {
 				die("ERROR: calculated interest is higher than the repayment amount!!!\n");
@@ -77,13 +77,13 @@ while($finished == 0) {
 			$payments[$i]['amount'] = $repayment;
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
-			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
+			$cur_stmt_date = strtotime("+1 month", $cur_stmt_date);
 			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		} else {
 			// on following statements interest from previous statement until previous due date and from previous due date until current statement date are applied
-			$days = (int)round(($prev_due_date - $prev_stmt_date) / $days2seconds, 0);
+			$days = round(($prev_due_date - $prev_stmt_date) / $days2seconds, 0);
 			$interest = round($prev_remainder * $int_rate / 360 * $days, 2);
-			$days = (int)round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
+			$days = round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
 			$interest+= round($remainder * $int_rate / 360 * $days, 2);
 			if($interest >= $repayment) {
 				die("ERROR: calculated interest is higher than the repayment amount!!!\n");
@@ -102,7 +102,7 @@ while($finished == 0) {
 			$payments[$i]['amount'] = $repayment;
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
-			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
+			$cur_stmt_date = strtotime("+1 month", $cur_stmt_date);
 			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		}
 	}
