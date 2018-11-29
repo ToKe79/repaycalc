@@ -58,7 +58,7 @@ while($finished == 0) {
 			$cur_due_date = $cur_stmt_date + ($due_days * 24 * 60 * 60);
 		} elseif($i == 2) {
 			// with second payment only interest from previous due date until current statement date are applied
-			$days = (int)(($cur_stmt_date - $prev_due_date) / $days2seconds);
+			$days = (int)round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
 			$interest = round($remainder * $int_rate / 360 * $days, 2);
 			if($interest >= $repayment) {
 				die("ERROR: calculated interest is higher than the repayment amount!!!\n");
@@ -81,9 +81,9 @@ while($finished == 0) {
 			$cur_due_date = $cur_stmt_date + ($due_days * 24 * 60 * 60);
 		} else {
 			// on following statements interest from previous statement until previous due date and from previous due date until current statement date are applied
-			$days = (int)(($prev_due_date - $prev_stmt_date) / $days2seconds);
+			$days = (int)round(($prev_due_date - $prev_stmt_date) / $days2seconds, 0);
 			$interest = round($prev_remainder * $int_rate / 360 * $days, 2);
-			$days = (int)(($cur_stmt_date - $prev_due_date) / $days2seconds);
+			$days = (int)round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
 			$interest+= round($remainder * $int_rate / 360 * $days, 2);
 			if($interest >= $repayment) {
 				die("ERROR: calculated interest is higher than the repayment amount!!!\n");
