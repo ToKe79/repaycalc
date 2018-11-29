@@ -55,7 +55,7 @@ while($finished == 0) {
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
 			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
-			$cur_due_date = $cur_stmt_date + ($due_days * 24 * 60 * 60);
+			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		} elseif($i == 2) {
 			// with second payment only interest from previous due date until current statement date are applied
 			$days = (int)round(($cur_stmt_date - $prev_due_date) / $days2seconds, 0);
@@ -78,7 +78,7 @@ while($finished == 0) {
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
 			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
-			$cur_due_date = $cur_stmt_date + ($due_days * 24 * 60 * 60);
+			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		} else {
 			// on following statements interest from previous statement until previous due date and from previous due date until current statement date are applied
 			$days = (int)round(($prev_due_date - $prev_stmt_date) / $days2seconds, 0);
@@ -103,7 +103,7 @@ while($finished == 0) {
 			$prev_stmt_date = $cur_stmt_date;
 			$prev_due_date = $cur_due_date;
 			$cur_stmt_date = (int)strtotime("+1 month", $cur_stmt_date);
-			$cur_due_date = $cur_stmt_date + ($due_days * 24 * 60 * 60);
+			$cur_due_date = $cur_stmt_date + ($due_days * $days2seconds);
 		}
 	}
 
